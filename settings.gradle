@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name='Gles20Test'
+rootProject.name='opengles_camera2_video_split_filter'
