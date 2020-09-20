@@ -72,11 +72,16 @@ public class VideoRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFra
         }
     }
 
+    public void resetVideo() {
+        playerPrepared = false;
+        playerPause = false;
+        mediaPlayer.reset();
+    }
+
     public void pauseVideo() {
         mediaPlayer.pause();
         playerPause = true;
     }
-
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
