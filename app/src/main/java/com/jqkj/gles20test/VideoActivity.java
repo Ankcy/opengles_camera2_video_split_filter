@@ -2,12 +2,14 @@ package com.jqkj.gles20test;
 
 import android.Manifest;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 
@@ -30,6 +32,10 @@ public class VideoActivity extends AppCompatActivity {
     private RelativeLayout mVideoContent;
     private RelativeLayout videoContentBottom;
 
+    private ImageView playVideoBtn;
+
+    private int filter;
+
     public String videoPath = Environment.getExternalStorageDirectory().getPath() + "/DCIM/camera/hz_trimmer_20200808_223640.mp4";
 
     @Override
@@ -49,7 +55,7 @@ public class VideoActivity extends AppCompatActivity {
 
         initView();
 
-        initData();
+        initVideoData(true);
 
         initEvent();
 
@@ -66,6 +72,7 @@ public class VideoActivity extends AppCompatActivity {
         mVideoView = findViewById(R.id.videoView);
         videoContentBottom = findViewById(R.id.videoContentBottom);
         mVideoContent = findViewById(R.id.videoContent);
+        playVideoBtn = findViewById(R.id.playVideoBtn);
 
         initVideoView();
 
@@ -99,14 +106,16 @@ public class VideoActivity extends AppCompatActivity {
         mVideoContent.setLayoutParams(layoutParams);
     }
 
-    private void initData() {
+    private void initVideoData(boolean start) {
         mVideoRender = mVideoView.getRenderer();
         try {
             mVideoRender.setVideoSrc(videoPath);
         } catch (Exception e) {
             Log.e("=====", e.getMessage());
         }
-        mVideoRender.startVideo();
+        if (start) {
+            mVideoRender.startVideo();
+        }
     }
 
     private void initEvent() {
@@ -117,19 +126,22 @@ public class VideoActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
 
                 if (checkedId == R.id.rb0) {
-                    mVideoRender.setFilter(0);
+                    filter = 0;
                 } else if (checkedId == R.id.rb2) {
-                    mVideoRender.setFilter(2);
+                    filter = 2;
                 } else if (checkedId == R.id.rb3) {
-                    mVideoRender.setFilter(3);
+                    filter = 3;
                 } else if (checkedId == R.id.rb4) {
-                    mVideoRender.setFilter(4);
+                    filter = 4;
                 } else if (checkedId == R.id.rb6) {
-                    mVideoRender.setFilter(6);
+                    filter = 6;
                 } else if (checkedId == R.id.rb9) {
-                    mVideoRender.setFilter(9);
+                    filter = 9;
+                } else if (checkedId == R.id.grey) {
+                    filter = 10;
                 }
 
+                mVideoRender.setFilter(filter);
 
             }
         });
@@ -151,6 +163,37 @@ public class VideoActivity extends AppCompatActivity {
             }
         });
 
+        playVideoBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isPlaying()) {
+                    playVideoBtn.setImageResource(R.drawable.playbtn);
+                    mVideoRender.pauseVideo();
+                } else {
+                    playVideoBtn.setImageResource(R.drawable.pausebtn);
+                    mVideoRender.startVideo();
+                }
+            }
+        });
+
+        mVideoRender.getMediaPlayer().setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                playVideoBtn.setImageResource(R.drawable.playbtn);
+                mVideoRender.resetVideo();
+                initVideoData(false);
+                mVideoRender.setFilter(filter);
+            }
+        });
+
+    }
+
+    private boolean isPlaying() {
+        if (mVideoRender.getMediaPlayer().isPlaying()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public static final int REQUEST_CODE_PICK_GALLERY = 8;
@@ -166,8 +209,8 @@ public class VideoActivity extends AppCompatActivity {
                     videoPath = Constants.getFilePathFromUri(this, videoUri);
                     initVideoView();
                     mVideoRender.resetVideo();
-                    initData();
-                    mVideoRender.setFilter(0);
+                    initVideoData(true);
+                    mVideoRender.setFilter(filter);
                 } catch (Exception e) {
                     Log.e("=====", e.getMessage());
                     return;

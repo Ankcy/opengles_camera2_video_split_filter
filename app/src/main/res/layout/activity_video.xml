@@ -11,7 +11,7 @@
 
         <RelativeLayout
             android:id="@+id/videoContentTop"
-            android:background="#000000"
+            android:background="#1e1e1e"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginBottom="180dp">
@@ -101,7 +101,32 @@
 
                     android:textColor="#ffffff"></RadioButton>
 
+                <RadioButton
+                    android:id="@+id/grey"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:text="灰色"
+
+                    android:textColor="#ffffff"></RadioButton>
+
             </com.jqkj.gles20test.util.RadioGroupUtils>
+
+            <LinearLayout
+                android:layout_above="@+id/radiogroup"
+                android:id="@+id/start_layout"
+                android:layout_centerHorizontal="true"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp">
+
+                <ImageView
+                    android:layout_gravity="center_vertical"
+                    android:id="@+id/playVideoBtn"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:src="@drawable/pausebtn"/>
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/go2Choose"

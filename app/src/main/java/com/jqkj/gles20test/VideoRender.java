@@ -63,6 +63,8 @@ public class VideoRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFra
             }
             mediaPlayer.start();
             playerPrepared = true;
+        } else {
+            mediaPlayer.start();
         }
     }
 
@@ -142,13 +144,19 @@ public class VideoRender implements GLSurfaceView.Renderer, SurfaceTexture.OnFra
     }
 
     public void setFilter(int i) {
-        videoView.queueEvent(new Runnable() {
-            @Override
-            public void run() {
-                CVFilter.release();
-                CVFilter.setFilter(i);
-                videoView.requestRender();
-            }
-        });
+        if (null != CVFilter) {
+            videoView.queueEvent(new Runnable() {
+                @Override
+                public void run() {
+                    CVFilter.release();
+                    CVFilter.setFilter(i);
+                    videoView.requestRender();
+                }
+            });
+        }
+    }
+
+    public MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
     }
 }

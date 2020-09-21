@@ -120,6 +120,8 @@ public class CVFilter {
             fragmentShader = OpenGlUtils.readGlShader(mContext, R.raw.simple_fragment_shader_six);
         } else if (i == 9) {
             fragmentShader = OpenGlUtils.readGlShader(mContext, R.raw.simple_fragment_shader_nine);
+        } else if (i == 10) {
+            fragmentShader = OpenGlUtils.readGlShader(mContext, R.raw.simple_fragment_shader_grey);
         }
         initProgram(vertexShader, fragmentShader);
     }
